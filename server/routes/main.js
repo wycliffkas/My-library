@@ -8,8 +8,9 @@ router.post(
   "/book",
   [
     body("name").trim().isLength({ min: 3 }),
-    body("author.firstName").trim().isLength({ min: 3 }),
-    body("author.lastName").trim().isLength({ min: 3 }),
+    body("isbn").trim().isLength({ min: 3 }),
+    body("author.firstName").trim().isLength({ min: 5 }),
+    body("author.lastName").trim().isLength({ min: 5 }),
   ],
   bookController.createBook
 );
@@ -21,8 +22,8 @@ router.get("/book/:bookId", bookController.getBook);
 router.post(
   "/author",
   [
-    body("firstName").trim().isLength({ min: 3 }),
-    body("lastName").trim().isLength({ min: 3 }),
+    body("firstName").trim().isLength({ min: 5 }),
+    body("lastName").trim().isLength({ min: 5 }),
   ],
   authorController.createAuthor
 );
@@ -30,5 +31,23 @@ router.post(
 router.get("/authors", authorController.getAuthors);
 
 router.get("/author/:authorId", authorController.getAuthor);
+
+router.put(
+  "/book/:bookId",
+  [
+    body("name").trim().isLength({ min: 3 }),
+    body("isbn").trim().isLength({ min: 3 }),
+  ],
+  bookController.updateBook
+);
+
+router.put(
+  "/author/:authorId",
+  [
+    body("firstName").trim().isLength({ min: 5 }),
+    body("lastName").trim().isLength({ min: 5 }),
+  ],
+  authorController.updateAuthor
+);
 
 module.exports = router;
