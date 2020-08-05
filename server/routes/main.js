@@ -15,4 +15,6 @@ router.post(
 
 router.get("/books", bookController.getBooks);
 
+router.get("/book/:bookId", bookController.getBook)
+
 module.exports = router;
