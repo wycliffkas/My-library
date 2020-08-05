@@ -1,2 +1,2 @@
 # My-library
-A web application that manages a list of Books
+A web application that manages a list of books

@@ -1,7 +1,7 @@
 const { validationResult } = require("express-validator");
-const Book = require("../models/book");
+const Author = require("../models/author");
 
-exports.createBook = (req, res, next) => {
+exports.createAuthor = (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -10,26 +10,20 @@ exports.createBook = (req, res, next) => {
     throw error;
   }
 
-  const name = req.body.name;
-  const isbn = req.body.isbn;
-  const authorFirstName = req.body.author.firstName;
-  const authorLastName = req.body.author.lastName;
+  const firstName = req.body.firstName;
+  const lastName = req.body.lastName;
 
-  const book = new Book({
-    name: name,
-    isbn: isbn,
-    author: {
-      firstName: authorFirstName,
-      lastName: authorLastName,
-    },
+  const author = new Author({
+    firstName: firstName,
+    lastName: lastName,
   });
 
-  book
+  author
     .save()
     .then((result) => {
       res.status(201).json({
-        message: "book saved successfully",
-        post: result,
+        message: "Author saved successfully",
+        author: result,
       });
     })
     .catch((error) => {
@@ -40,11 +34,11 @@ exports.createBook = (req, res, next) => {
     });
 };
 
-exports.getBooks = (req, res, next) => {
-  Book.find()
-    .then((books) => {
+exports.getAuthors = (req, res, next) => {
+  Author.find()
+    .then((authors) => {
       res.status(200).json({
-        books: books,
+        authors: authors,
       });
     })
     .catch((error) => {
@@ -55,17 +49,17 @@ exports.getBooks = (req, res, next) => {
     });
 };
 
-exports.getBook = (req, res, next) => {
-  const bookId = req.params.bookId;
+exports.getAuthor = (req, res, next) => {
+  const authorId = req.params.authorId;
 
-  Book.findById(bookId)
-    .then((book) => {
-      if (!book) {
-        const error = new Error("Could not find book.");
+  Author.findById(authorId)
+    .then((author) => {
+      if (!author) {
+        const error = new Error("Could not find author.");
         error.statusCode = 404;
         throw error;
       }
-      res.status(200).json({ book: book });
+      res.status(200).json({ author: author });
     })
     .catch((error) => {
       if (!error.statusCode) {
