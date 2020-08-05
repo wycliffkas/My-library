@@ -74,3 +74,40 @@ exports.getBook = (req, res, next) => {
       next(error);
     });
 };
+
+exports.updateBook = (req, res, next) => {
+  const bookId = req.params.bookId;
+
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    const error = new Error("Validation failed, entered data is incorrect.");
+    error.statusCode = 422;
+    throw error;
+  }
+
+  const name = req.body.name;
+  const isbn = req.body.isbn;
+
+  Book.findById(bookId)
+    .then((book) => {
+      if (!book) {
+        const error = new Error("Could not find book.");
+        error.statusCode = 404;
+        throw error;
+      }
+
+      book.name = name;
+      book.isbn = isbn;
+      return book.save();
+    })
+    .then((result) => {
+      res.status(200).json({ message: "Book updated!", book: result });
+    })
+    .catch((error) => {
+      if (!error.statusCode) {
+        error.statusCode = 500;
+      }
+      next(error);
+    });
+};
