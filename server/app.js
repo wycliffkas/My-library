@@ -2,6 +2,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const mainRoutes = require("./routes/main");
+const errorController = require("./controllers/error");
+
+require('dotenv').config();
 
 const app = express();
 
@@ -27,9 +30,11 @@ app.use((error, req, res, next) => {
   res.status(status).json({ message: message, data: data });
 });
 
+app.use(errorController.get404);
+
 mongoose
   .connect(
-    "mongodb+srv://wyco:wyco2020@cluster0-f8gxz.mongodb.net/library?retryWrites=true&w=majority",
+    process.env.MONGO_DB_CONNECTION_STRING,
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then((result) => {

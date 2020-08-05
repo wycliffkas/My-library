@@ -13,4 +13,6 @@ router.post(
   bookController.createBook
 );
 
+router.get("/books", bookController.getBooks);
+
 module.exports = router;
