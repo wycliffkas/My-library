@@ -54,3 +54,23 @@ exports.getBooks = (req, res, next) => {
       next(error);
     });
 };
+
+exports.getBook = (req, res, next) => {
+  const bookId = req.params.bookId;
+
+  Book.findById(bookId)
+    .then((book) => {
+      if (!book) {
+        const error = new Error("Could not find book.");
+        error.statusCode = 404;
+        throw error;
+      }
+      res.status(200).json({ book: book });
+    })
+    .catch((error) => {
+      if (!error.statusCode) {
+        error.statusCode = 500;
+      }
+      next(error);
+    });
+};
