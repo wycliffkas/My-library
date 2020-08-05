@@ -39,3 +39,18 @@ exports.createBook = (req, res, next) => {
       next(error);
     });
 };
+
+exports.getBooks = (req, res, next) => {
+  Book.find()
+    .then((books) => {
+      res.status(200).json({
+        books: books,
+      });
+    })
+    .catch((error) => {
+      if (!error.statusCode) {
+        error.statusCode = 500;
+      }
+      next(error);
+    });
+};
