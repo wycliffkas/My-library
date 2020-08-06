@@ -12,9 +12,10 @@ const bookSchema = new Schema(
       required: true,
     },
     author: {
-      type: Object,
-      required: String,
-    },
+      type: Schema.Types.ObjectId,
+      ref: 'Author',
+      required: true
+    }
   },
   { timestamps: true }
 );
