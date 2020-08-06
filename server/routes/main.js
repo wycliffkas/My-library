@@ -9,8 +9,6 @@ router.post(
   [
     body("name").trim().isLength({ min: 3 }),
     body("isbn").trim().isLength({ min: 3 }),
-    body("author.firstName").trim().isLength({ min: 5 }),
-    body("author.lastName").trim().isLength({ min: 5 }),
   ],
   bookController.createBook
 );
