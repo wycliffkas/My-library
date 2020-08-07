@@ -16,7 +16,7 @@ const Book = () => {
 
   useEffect(() => {
     fetchBooks();
-  }, []);
+  }, [books]);
 
   const hideModal = () => {
     setModal(false);
@@ -55,7 +55,7 @@ const Book = () => {
         if (resData.error) {
           throw new Error("Fetching book failed!");
         }
-        console.log(resData, "resData ---->")
+        console.log(resData, "resData ---->");
         setBook(resData.book);
       })
       .catch((error) => {
@@ -137,7 +137,7 @@ const Book = () => {
   const handleCancel = () => {
     setNewBook({ name: "", isbn: "", author: "" });
     setModal(false);
-  }
+  };
 
   return (
     <div className="container">
@@ -152,7 +152,6 @@ const Book = () => {
           </button>
           <MainModal onHideModal={hideModal} modal={modal}>
             {editMode ? (
-              
               <Form
                 onHandleChange={handleChange}
                 onHandleSubmit={handleSaveBook}
@@ -161,12 +160,14 @@ const Book = () => {
                 newBook={newBook}
               />
             ) : (
-              <Card book={book}/>
+              <Card book={book} />
             )}
           </MainModal>
-          {books.length > 0 ?
-          (<Table books={books} onDisplayDetails={displayDetails} />)
-          :<Loader/>}
+          {books.length > 0 ? (
+            <Table books={books} onDisplayDetails={displayDetails} />
+          ) : (
+            <Loader />
+          )}
         </div>
       </div>
     </div>
