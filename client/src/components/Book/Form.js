@@ -1,8 +1,9 @@
 import React from "react";
 
-const BookForm = ({ onHandleChange, onHandleSubmit, authors, newBook }) => {
+const Form = ({ onHandleChange, onHandleSubmit, authors, newBook, onHandleCancel }) => {
   return (
     <div>
+      <h5 className="center-text">Add a new book</h5>
       <form>
         <div className="form-group">
           <label htmlFor="exampleInputEmail1">Name</label>
@@ -53,9 +54,16 @@ const BookForm = ({ onHandleChange, onHandleSubmit, authors, newBook }) => {
         >
           Submit
         </button>
+        <button
+          type="submit"
+          className="btn btn-secondary"
+          onClick={onHandleCancel}
+        >
+          Cancel
+        </button>
       </form>
     </div>
   );
 };
 
-export default BookForm;
+export default Form;

@@ -1,17 +1,66 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import MainModal from "../common/MainModal";
-import BookForm from "../components/BookForm";
+import Form from "../components/Book/Form";
+import Table from "../components/Book/Table";
+import Card from "../components/Book/Card";
+import Loader from "../common/Loader";
 
 const Book = () => {
   const [modal, setModal] = useState(false);
   const [authors, setAuthors] = useState([]);
+  const [books, setBooks] = useState([]);
+  const [book, setBook] = useState({});
   const [newBook, setNewBook] = useState({ name: "", isbn: "", author: "" });
+  const [editMode, setEditMode] = useState(true);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    fetchBooks();
+  }, []);
 
   const hideModal = () => {
     setModal(false);
+  };
+
+  const fetchBooks = () => {
+    fetch("http://localhost:8080/books", {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((resData) => {
+        if (resData.error) {
+          throw new Error("Fetching books failed!");
+        }
+        setBooks(resData.books);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const fetchBook = (id) => {
+    fetch(`http://localhost:8080/book/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((resData) => {
+        if (resData.error) {
+          throw new Error("Fetching book failed!");
+        }
+        console.log(resData, "resData ---->")
+        setBook(resData.book);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const fetchAuthors = () => {
@@ -24,8 +73,8 @@ const Book = () => {
         return response.json();
       })
       .then((resData) => {
-        if (resData.errors) {
-          throw new Error('Fetching authors failed!');
+        if (resData.error) {
+          throw new Error("Fetching authors failed!");
         }
         setAuthors(resData.authors);
       })
@@ -37,6 +86,7 @@ const Book = () => {
   const addBook = () => {
     fetchAuthors();
     setModal(true);
+    setEditMode(true);
   };
 
   const handleChange = (event) => {
@@ -44,6 +94,12 @@ const Book = () => {
       ...newBook,
       [event.target.name]: event.target.value,
     });
+  };
+
+  const displayDetails = (id) => {
+    setModal(true);
+    setEditMode(false);
+    fetchBook(id);
   };
 
   const handleSaveBook = (event) => {
@@ -61,40 +117,58 @@ const Book = () => {
       },
       body: JSON.stringify(bookDetails),
     })
-    .then(response => {
-      return response.json();
-    })
+      .then((response) => {
+        return response.json();
+      })
       .then((resData) => {
-        if(resData.error) {
+        if (resData.error) {
           toast.error("Saving book failed!, check the details entered");
-          throw new Error('Saving book failed!');
+          throw new Error("Saving book failed!");
         }
         toast.success("Book has been successfully registered");
       })
       .catch((error) => {
         console.log(error);
       });
-      setNewBook({name: "", isbn: "", author: ""})
-      setModal(false);
+    setNewBook({ name: "", isbn: "", author: "" });
+    setModal(false);
   };
 
+  const handleCancel = () => {
+    setNewBook({ name: "", isbn: "", author: "" });
+    setModal(false);
+  }
+
   return (
-    <div className="row no-gutters justify-content-center">
-      <button
-        type="button"
-        className="btn btn-outline-primary"
-        onClick={addBook}
-      >
-        Add Book
-      </button>
-      <MainModal onHideModal={hideModal} modal={modal}>
-        <BookForm
-          onHandleChange={handleChange}
-          onHandleSubmit={handleSaveBook}
-          authors={authors}
-          newBook={newBook}
-        />
-      </MainModal>
+    <div className="container">
+      <div className="row justify-content-center">
+        <div className="col-8">
+          <button
+            type="button"
+            className="btn btn-outline-primary my-4"
+            onClick={addBook}
+          >
+            Add Book
+          </button>
+          <MainModal onHideModal={hideModal} modal={modal}>
+            {editMode ? (
+              
+              <Form
+                onHandleChange={handleChange}
+                onHandleSubmit={handleSaveBook}
+                onHandleCancel={handleCancel}
+                authors={authors}
+                newBook={newBook}
+              />
+            ) : (
+              <Card book={book}/>
+            )}
+          </MainModal>
+          {books.length > 0 ?
+          (<Table books={books} onDisplayDetails={displayDetails} />)
+          :<Loader/>}
+        </div>
+      </div>
     </div>
   );
 };

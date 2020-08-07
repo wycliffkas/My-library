@@ -11,7 +11,7 @@ function App() {
       <Router>
         <ToastContainer />
         <Switch>
-          <Route path="/book" component={Book} />
+          <Route path="/" component={Book} />
           <Route component={NotFound} />
         </Switch>
       </Router>

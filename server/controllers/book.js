@@ -5,7 +5,7 @@ exports.createBook = (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    console.log("errors", errors)
+    console.log("errors", errors);
     const error = new Error("Validation failed, entered data is incorrect.");
     error.statusCode = 422;
     throw error;
@@ -56,6 +56,7 @@ exports.getBook = (req, res, next) => {
   const bookId = req.params.bookId;
 
   Book.findById(bookId)
+    .populate("author")
     .then((book) => {
       if (!book) {
         const error = new Error("Could not find book.");
