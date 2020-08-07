@@ -3,7 +3,7 @@ import React from "react";
 const Form = ({ onHandleChange, onHandleSubmit, authors, newBook, onHandleCancel }) => {
   return (
     <div>
-      <h5 className="center-text">Add a new book</h5>
+      <h5 className="center-text">Add a book</h5>
       <form>
         <div className="form-group">
           <label htmlFor="exampleInputEmail1">Name</label>
@@ -13,7 +13,7 @@ const Form = ({ onHandleChange, onHandleSubmit, authors, newBook, onHandleCancel
             name="name"
             value={newBook.name}
             onChange={onHandleChange}
-            required
+            required="required"
           />
         </div>
         <div className="form-group">
