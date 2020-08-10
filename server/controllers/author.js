@@ -71,7 +71,7 @@ exports.getAuthor = (req, res, next) => {
 
 exports.updateAuthor = (req, res, next) => {
   const authorId = req.params.authorId;
-
+ 
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -82,6 +82,7 @@ exports.updateAuthor = (req, res, next) => {
 
   const firstName = req.body.firstName;
   const lastName = req.body.lastName;
+
 
   Author.findById(authorId)
     .then((author) => {

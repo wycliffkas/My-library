@@ -1,9 +1,18 @@
 import React from "react";
 
-const Form = ({ onHandleChange, onHandleSubmit, newAuthor, onHandleCancel }) => {
+const Form = ({
+  onHandleChange,
+  onHandleSubmit,
+  author,
+  onHandleCancel,
+  editing,
+  errors,
+}) => {
+  const pageTitle = editing ? "Edit Author" : "Add Author";
+  const buttonTitle = editing ? "Update" : "Save";
   return (
     <div>
-      <h5 className="center-text">Add an Author</h5>
+      <h5 className="center-text">{pageTitle}</h5>
       <form>
         <div className="form-group">
           <label htmlFor="exampleInputEmail1">First Name</label>
@@ -11,10 +20,11 @@ const Form = ({ onHandleChange, onHandleSubmit, newAuthor, onHandleCancel }) => 
             type="text"
             className="form-control"
             name="firstName"
-            value={newAuthor.firstName}
+            value={author.firstName}
             onChange={onHandleChange}
-            required
+            style={errors.firstName && { border: "solid 1px red" }}
           />
+          {errors.firstName && <p>{errors.firstName}</p>}
         </div>
         <div className="form-group">
           <label htmlFor="exampleInputEmail1">Last Name</label>
@@ -22,17 +32,19 @@ const Form = ({ onHandleChange, onHandleSubmit, newAuthor, onHandleCancel }) => 
             type="text"
             className="form-control"
             name="lastName"
-            value={newAuthor.lastName}
+            value={author.lastName}
             onChange={onHandleChange}
-            required
+            style={errors.lastName && { border: "solid 1px red" }}
           />
+          {errors.lastName && <p>{errors.lastName}</p>}
         </div>
+
         <button
           type="submit"
           className="btn btn-primary"
           onClick={onHandleSubmit}
         >
-          Submit
+          {buttonTitle}
         </button>
         <button
           type="submit"

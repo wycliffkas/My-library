@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const Table = ({ books, onDisplayDetails }) => {
+const Table = ({ books, onDisplayDetails, onEditBook }) => {
   return (
     <div>
       <table className="table table-striped">
@@ -15,11 +15,15 @@ const Table = ({ books, onDisplayDetails }) => {
           {books.map((book) => (
             <tr key={book._id}>
               <td>
-                <Link to="/" onClick={() => onDisplayDetails(book._id)}>
+                <Link to="#" onClick={() => onDisplayDetails(book._id)}>
                   {book.name}
                 </Link>
               </td>
-              <td>Edit</td>
+              <td>
+                <Link to="#" onClick={() => onEditBook(book._id)}>
+                  Edit
+                </Link>
+              </td>
             </tr>
           ))}
         </tbody>

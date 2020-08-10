@@ -2,7 +2,7 @@ import React from "react";
 import { Route, Switch, BrowserRouter as Router } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import NotFound from "./components/NotFound";
+import NotFound from "./common/NotFound";
 import Book from "./containers/Book";
 import Author from "./containers/Author";
 import Header from "./common/Header";
