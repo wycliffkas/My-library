@@ -1,89 +1,78 @@
 import React, { useState, useEffect } from "react";
-import { toast } from "react-toastify";
 import MainModal from "../common/MainModal";
 import Form from "../components/Author/Form";
 import Table from "../components/Author/Table";
 import Loader from "../common/Loader";
+import { fetchAuthors, fetchAuthor, createAuthor } from "../util/fetch";
+import { authorValidation } from "../util/validation";
 
 const Author = () => {
-
   const [modal, setModal] = useState(false);
-  const [newAuthor, setNewAuthor] = useState({ firstName: "", lastName: "" });
-  const [authors, setAuthors] = useState({});
+  const [author, setAuthor] = useState({ id: "", firstName: "", lastName: "" });
+  const [authors, setAuthors] = useState([]);
+  const [editing, setEditing] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    fetchAuthors();
-  }, [authors]);
+    fetchAuthors(setAuthors, setLoading);
+  }, [modal]);
 
   const hideModal = () => {
     setModal(false);
+    setAuthor({ id: "", firstName: "", lastName: "" });
   };
 
   const addAuthor = () => {
     setModal(true);
+    setEditing(false);
   };
 
   const handleChange = (event) => {
-    setNewAuthor({
-      ...newAuthor,
-      [event.target.name]: event.target.value,
-    });
+    const name = event.target.name;
+    const value = event.target.value;
+    setAuthor((prevAuthor) => ({
+      ...prevAuthor,
+      [name]: value,
+    }));
   };
 
   const handleSaveAuthor = (event) => {
     event.preventDefault();
+
+    const errors = authorValidation(author);
+
+    if (Object.keys(errors).length > 0) {
+      return setErrors(errors);
+    }
+
+    let apiUrl = "http://localhost:8080/author";
+    let method = "POST";
+
+    if (editing) {
+      console.log("author.id-->", author.id);
+      apiUrl = `http://localhost:8080/author/${author.id}`;
+      method = "PUT";
+    }
+
     const authorDetails = {
-      firstName: newAuthor.firstName,
-      lastName: newAuthor.lastName,
+      firstName: author.firstName,
+      lastName: author.lastName,
     };
 
-    fetch("http://localhost:8080/author", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(authorDetails),
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((resData) => {
-        if (resData.error) {
-          toast.error("Saving author failed!, check the details entered");
-          throw new Error("Saving author failed!");
-        }
-        toast.success("Author has been successfully registered");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    setNewAuthor({ firstName: "", lastName: "" });
-    setModal(false);
+    createAuthor(apiUrl, method, authorDetails, setErrors, setModal);
+    setAuthor({ id: "", firstName: "", lastName: "" });
   };
 
   const handleCancel = () => {
-    setNewAuthor({ firstName: "", lastName: "" });
+    setAuthor({ id: "", firstName: "", lastName: "" });
     setModal(false);
   };
 
-  const fetchAuthors = () => {
-    fetch("http://localhost:8080/authors", {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((resData) => {
-        if (resData.error) {
-          throw new Error("Fetching authors failed!");
-        }
-        setAuthors(resData.authors);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  const editAuthor = (id) => {
+    fetchAuthor(id, setAuthor);
+    setModal(true);
+    setEditing(true);
   };
 
   return (
@@ -103,11 +92,21 @@ const Author = () => {
               onHandleChange={handleChange}
               onHandleSubmit={handleSaveAuthor}
               onHandleCancel={handleCancel}
-              newAuthor={newAuthor}
+              author={author}
+              editing={editing}
+              errors={errors}
             />
           </MainModal>
 
-          {authors.length > 0 ? <Table authors={authors} /> : <Loader />}
+          {loading && <Loader />}
+
+          {authors.length <= 0 && !loading ? (
+            <p className="center-text">No authors found.</p>
+          ) : null}
+
+          {!loading && authors.length > 0 ? (
+            <Table authors={authors} onEditAuthor={editAuthor} />
+          ) : null}
         </div>
       </div>
     </div>

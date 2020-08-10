@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const Table = ({ authors }) => {
+const Table = ({ authors, onEditAuthor }) => {
   return (
     <div>
       <table className="table table-striped">
@@ -17,7 +17,11 @@ const Table = ({ authors }) => {
             <tr key={author._id}>
               <td>{author.firstName}</td>
               <td>{author.lastName}</td>
-              <td>Edit</td>
+              <td>
+                <Link to="#" onClick={() => onEditAuthor(author._id)}>
+                  Edit
+                </Link>
+              </td>
             </tr>
           ))}
         </tbody>

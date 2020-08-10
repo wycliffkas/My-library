@@ -1,9 +1,9 @@
 import React from "react";
 import Loader from "../../common/Loader";
-const Card = ({ book }) => {
+const Card = ({ book, loading }) => {
   return (
     <div>
-      {Object.keys(book).length ? (
+      {!loading && Object.keys(book).length > 0 ? (
         <div className="card-content">
           <p>
             <strong>Title:</strong> {book.name}
@@ -12,8 +12,8 @@ const Card = ({ book }) => {
             <strong>Isbn:</strong> {book.isbn}
           </p>
           <p>
-            <strong>Author:</strong>
-            {book.author.firstName + " " + book.author.lastName}
+            <strong>Author: </strong>
+            {book.author}
           </p>
         </div>
       ) : (
