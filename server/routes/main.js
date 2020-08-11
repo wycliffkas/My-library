@@ -20,8 +20,8 @@ router.get("/book/:bookId", bookController.getBook);
 router.post(
   "/author",
   [
-    body("firstName").trim().isLength({ min: 5 }),
-    body("lastName").trim().isLength({ min: 5 }),
+    body("firstName").trim().isLength({ min: 3 }),
+    body("lastName").trim().isLength({ min: 3 }),
   ],
   authorController.createAuthor
 );
