@@ -42,8 +42,8 @@ router.put(
 router.put(
   "/author/:authorId",
   [
-    body("firstName").trim().isLength({ min: 5 }),
-    body("lastName").trim().isLength({ min: 5 }),
+    body("firstName").trim().isLength({ min: 3 }),
+    body("lastName").trim().isLength({ min: 3 }),
   ],
   authorController.updateAuthor
 );
