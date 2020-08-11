@@ -11,6 +11,11 @@ A web application that manages a list of books
 - Display saved authors
 - Edit author details
 
+## Technologies
+- React
+- Node/ExpressJs
+- MongoDb
+
 ## How to run the application
 
 #### requirements
