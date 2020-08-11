@@ -50,7 +50,6 @@ const Author = () => {
     let method = "POST";
 
     if (editing) {
-      console.log("author.id-->", author.id);
       apiUrl = `http://localhost:8080/author/${author.id}`;
       method = "PUT";
     }
